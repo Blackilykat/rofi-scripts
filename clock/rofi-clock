@@ -1,0 +1,89 @@
+#!/bin/bash
+send() {
+	printf '\n'
+}
+open() {
+	printf '{'
+}
+close() {
+	printf '}'
+}
+opens() {
+	printf '['
+}
+closes() {
+	printf ']'
+}
+separate() {
+	printf ','
+}
+value() {
+	printf "\"$1\":\"$2\""
+}
+valuens() {
+	printf "\"$1\":$2"
+}
+line() {
+	open
+	value text "$1"
+	separate
+	valuens urgent "$2"
+	separate
+	valuens highlight "$3"
+	separate
+	valuens markup "$4"
+	separate
+	value data "$5"
+	close
+}
+
+# easy way to run it
+if [ "$1" != "from_blocks" ];
+then
+	rofi -modi blocks -show blocks -blocks-wrap "rofi-clock from_blocks" -theme-str "listview {lines: 7; columns: 7; flow: horizontal;}"
+	exit
+fi
+
+while true ; do
+	open
+	value prompt "Clock"
+	separate
+	value message "$(date +"%D - %H:%M:%S - %A")"
+	separate
+	#value input ""
+	#separate
+	value "input action" "send"
+	separate
+	valuens lines ""
+	opens
+	line Mon true false false dayWeek; separate
+	line Tue true false false dayWeek; separate
+	line Wed true false false dayWeek; separate
+	line Thu true false false dayWeek; separate
+	line Fri true false false dayWeek; separate
+	line Sat true false false dayWeek; separate
+	line Sun true false false dayWeek; separate
+	day="$(date -d"$(date +%Y%m"0"$((9-$(date -d$(date +%Y%m"01") +%u)))) - 7 days" +%Y-%m-%d)"
+	#line "$(date -d"$day" +%d)" false false false "$day"
+	#day="$(date -d"$day + 1 day" +%Y-%m-%d)"
+	i=0
+	while [[ "10#$(date -d"$day" +%m)" -le "10#$(date +%m)" ]] do
+		if [ "$i" != 0 ]
+		then
+			separate
+		fi
+		
+		if [ "$day" = "$(date +%Y-%m-%d)" ]
+		then
+			line "<b>$(date -d"$day" +%d)</b>" false true true "$day"
+		else
+			line "$(date -d"$day" +%d)" false false true "$day"
+		fi
+		day="$(date -d"$day + 1 day" +%Y-%m-%d)"
+		i="$(($i + 1))"
+	done
+	closes
+	close
+	send
+	sleep 0.1
+done

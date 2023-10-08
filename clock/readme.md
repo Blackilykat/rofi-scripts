@@ -22,3 +22,6 @@ If you want to use a custom rofi command, you can modify the default one:
 rofi -modi blocks -show blocks -blocks-wrap "rofi-clock from_blocks" -theme-str "listview {lines: 7; columns: 7; flow: horizontal;}"
 ```
 If you choose to directly call rofi, **DO NOT** use `-mode "clock:rofi-clock from_blocks" -show clock`. It could freeze your screen and force you to restart your device, as rofi does not support updating values live and will wait until the never ending script has finished executing before showing the menu.
+
+## Screenshots
+The [screenshots](screenshots/) directory contains a few screenshots showing how the clock looks with different themes.
